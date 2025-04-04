@@ -11,20 +11,18 @@ export class SubscriptionsGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const requiredSubscription =
-      this.reflector.getAllAndOverride<SubscriptionEnum>(SUBSCRIPTION_KEY, [
-        context.getHandler(),
-        context.getClass(),
-      ]);
+    const requiredSubscription = this.reflector.getAllAndOverride<
+      SubscriptionEnum | undefined
+    >(SUBSCRIPTION_KEY, [context.getHandler(), context.getClass()]);
 
-    const userSubscription = context.switchToHttp().getRequest().headers[
-      'x-user-subscription'
-    ];
+    if (!requiredSubscription) {
+      return true;
+    }
+
+    const userSubscription: string = context.switchToHttp().getRequest()
+      .headers['x-user-subscription'];
 
     switch (requiredSubscription) {
-      case Subscription.Free: {
-        return true;
-      }
       case Subscription.Basic: {
         return (
           userSubscription === Subscription.Basic ||

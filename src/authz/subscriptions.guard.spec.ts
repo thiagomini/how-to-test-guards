@@ -15,7 +15,6 @@ import { Subscription } from './subscriptions';
 @Controller()
 @UseGuards(SubscriptionsGuard)
 class TestController {
-  @RequiresSubscription(Subscription.Free)
   @Get('/free')
   public freeEndpoint() {
     return 'success';
@@ -56,23 +55,16 @@ describe('SubscriptionsGuard', () => {
     await testApp.close();
   });
 
-  test('FREE user can access FREE endpoints', async () => {
+  test('A Free user can access Free endpoints', async () => {
     await request(testApp.getHttpServer())
       .get('/free')
-      .set('x-user-subscription', Subscription.Free)
       .expect(200)
       .expect('success');
   });
   test('A Free user cannot access Basic and Premium endpoints', async () => {
-    await request(testApp.getHttpServer())
-      .get('/basic')
-      .set('x-user-subscription', Subscription.Free)
-      .expect(403);
+    await request(testApp.getHttpServer()).get('/basic').expect(403);
 
-    await request(testApp.getHttpServer())
-      .get('/premium')
-      .set('x-user-subscription', Subscription.Free)
-      .expect(403);
+    await request(testApp.getHttpServer()).get('/premium').expect(403);
   });
   test('A Basic user can access Free and Basic endpoints', async () => {
     await request(testApp.getHttpServer())

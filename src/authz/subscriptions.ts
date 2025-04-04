@@ -1,5 +1,4 @@
 export const Subscription = {
-  Free: 'FREE',
   Basic: 'BASIC',
   Premium: 'PREMIUM',
 } as const;
