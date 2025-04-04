@@ -87,6 +87,11 @@ describe('SubscriptionsGuard', () => {
       .expect(200)
       .expect('success');
   });
+  test('A Basic user cannot access Premium endpoints', async () => {
+    await request(testApp.getHttpServer())
+      .get('/premium')
+      .set('x-user-subscription', Subscription.Basic)
+      .expect(403);
+  });
   test.todo('A Premium user can access Free, Basic and Premium endpoints');
-  test.todo('A Basic user cannot access Premium endpoints');
 });
