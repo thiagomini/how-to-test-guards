@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { Subscription, SubscriptionEnum } from './subscriptions';
 import { SUBSCRIPTION_KEY } from './subscription.decorator';
+import { SUBSCRIPTION_HEADER } from './subscription.header';
 
 @Injectable()
 export class SubscriptionsGuard implements CanActivate {
@@ -20,7 +21,7 @@ export class SubscriptionsGuard implements CanActivate {
     }
 
     const userSubscription: string = context.switchToHttp().getRequest()
-      .headers['x-user-subscription'];
+      .headers[SUBSCRIPTION_HEADER];
 
     switch (requiredSubscription) {
       case Subscription.Basic: {

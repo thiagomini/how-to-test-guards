@@ -11,6 +11,7 @@ import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { RequiresSubscription } from './subscription.decorator';
 import { Subscription } from './subscriptions';
+import { SUBSCRIPTION_HEADER } from './subscription.header';
 
 @Controller()
 @UseGuards(SubscriptionsGuard)
@@ -69,38 +70,38 @@ describe('SubscriptionsGuard', () => {
   test('A Basic user can access Free and Basic endpoints', async () => {
     await request(testApp.getHttpServer())
       .get('/free')
-      .set('x-user-subscription', Subscription.Basic)
+      .set(SUBSCRIPTION_HEADER, Subscription.Basic)
       .expect(200)
       .expect('success');
 
     await request(testApp.getHttpServer())
       .get('/basic')
-      .set('x-user-subscription', Subscription.Basic)
+      .set(SUBSCRIPTION_HEADER, Subscription.Basic)
       .expect(200)
       .expect('success');
   });
   test('A Basic user cannot access Premium endpoints', async () => {
     await request(testApp.getHttpServer())
       .get('/premium')
-      .set('x-user-subscription', Subscription.Basic)
+      .set(SUBSCRIPTION_HEADER, Subscription.Basic)
       .expect(403);
   });
   test('A Premium user can access Free, Basic and Premium endpoints', async () => {
     await request(testApp.getHttpServer())
       .get('/free')
-      .set('x-user-subscription', Subscription.Premium)
+      .set(SUBSCRIPTION_HEADER, Subscription.Premium)
       .expect(200)
       .expect('success');
 
     await request(testApp.getHttpServer())
       .get('/basic')
-      .set('x-user-subscription', Subscription.Premium)
+      .set(SUBSCRIPTION_HEADER, Subscription.Premium)
       .expect(200)
       .expect('success');
 
     await request(testApp.getHttpServer())
       .get('/premium')
-      .set('x-user-subscription', Subscription.Premium)
+      .set(SUBSCRIPTION_HEADER, Subscription.Premium)
       .expect(200)
       .expect('success');
   });
