@@ -63,8 +63,18 @@ describe('SubscriptionsGuard', () => {
       .expect(200)
       .expect('success');
   });
+  test('A Free user cannot access Basic and Premium endpoints', async () => {
+    await request(testApp.getHttpServer())
+      .get('/basic')
+      .set('x-user-subscription', Subscription.Free)
+      .expect(403);
+
+    await request(testApp.getHttpServer())
+      .get('/premium')
+      .set('x-user-subscription', Subscription.Free)
+      .expect(403);
+  });
   test.todo('A Basic user can access Free and Basic endpoints');
   test.todo('A Premium user can access Free, Basic and Premium endpoints');
-  test.todo('A Free user cannot access Basic and Premium endpoints');
   test.todo('A Basic user cannot access Premium endpoints');
 });
