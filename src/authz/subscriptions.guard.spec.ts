@@ -93,5 +93,23 @@ describe('SubscriptionsGuard', () => {
       .set('x-user-subscription', Subscription.Basic)
       .expect(403);
   });
-  test.todo('A Premium user can access Free, Basic and Premium endpoints');
+  test('A Premium user can access Free, Basic and Premium endpoints', async () => {
+    await request(testApp.getHttpServer())
+      .get('/free')
+      .set('x-user-subscription', Subscription.Premium)
+      .expect(200)
+      .expect('success');
+
+    await request(testApp.getHttpServer())
+      .get('/basic')
+      .set('x-user-subscription', Subscription.Premium)
+      .expect(200)
+      .expect('success');
+
+    await request(testApp.getHttpServer())
+      .get('/premium')
+      .set('x-user-subscription', Subscription.Premium)
+      .expect(200)
+      .expect('success');
+  });
 });
