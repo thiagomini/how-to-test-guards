@@ -1,9 +1,13 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
-import { Subscription, SubscriptionEnum } from './subscriptions';
 import { SUBSCRIPTION_KEY } from './subscription.decorator';
 import { SUBSCRIPTION_HEADER } from './subscription.header';
+import {
+  isSubscription,
+  subscription,
+  SubscriptionEnum,
+} from './subscriptions';
 
 @Injectable()
 export class SubscriptionsGuard implements CanActivate {
@@ -23,19 +27,10 @@ export class SubscriptionsGuard implements CanActivate {
     const userSubscription: string = context.switchToHttp().getRequest()
       .headers[SUBSCRIPTION_HEADER];
 
-    switch (requiredSubscription) {
-      case Subscription.Basic: {
-        return (
-          userSubscription === Subscription.Basic ||
-          userSubscription === Subscription.Premium
-        );
-      }
-      case Subscription.Premium: {
-        return userSubscription === Subscription.Premium;
-      }
-      default: {
-        return false;
-      }
+    if (!isSubscription(userSubscription)) {
+      return false;
     }
+
+    return subscription(userSubscription).allows(requiredSubscription);
   }
 }
