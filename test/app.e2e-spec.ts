@@ -83,4 +83,12 @@ describe('AppController (e2e)', () => {
         });
       });
   });
+
+  it('/content/analytics (GET) - denies request when user does not have premium plan', () => {
+    return request(app.getHttpServer())
+      .get('/content/analytics')
+      .set(SUBSCRIPTION_HEADER, Subscription.Basic)
+      .send()
+      .expect(403);
+  });
 });
