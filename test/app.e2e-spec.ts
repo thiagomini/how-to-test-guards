@@ -36,4 +36,21 @@ describe('AppController (e2e)', () => {
         });
       });
   });
+
+  it('/templates (GET) - returns a list of templates', () => {
+    return request(app.getHttpServer())
+      .get('/content/templates')
+      .set(SUBSCRIPTION_HEADER, Subscription.Basic)
+      .send()
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toEqual([
+          {
+            id: expect.any(String),
+            name: expect.any(String),
+            description: expect.any(String),
+          },
+        ]);
+      });
+  });
 });
