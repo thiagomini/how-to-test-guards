@@ -53,4 +53,11 @@ describe('AppController (e2e)', () => {
         ]);
       });
   });
+
+  it('/templates (GET) - denies request when user does not have basic plan', () => {
+    return request(app.getHttpServer())
+      .get('/content/templates')
+      .send()
+      .expect(403);
+  });
 });

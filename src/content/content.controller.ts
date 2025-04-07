@@ -1,6 +1,9 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { RequiresSubscription } from '../authz/subscription.decorator';
+import { SubscriptionsGuard } from '../authz/subscriptions.guard';
 
 @Controller('content')
+@UseGuards(SubscriptionsGuard)
 export class ContentController {
   @Post('generate')
   generateContent() {
@@ -9,6 +12,7 @@ export class ContentController {
     };
   }
 
+  @RequiresSubscription('BASIC')
   @Get('templates')
   getTemplates() {
     return [
