@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { SUBSCRIPTION_HEADER } from '../src/authz/subscription.header';
+import { Subscription } from '../src/authz/subscriptions';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -20,5 +22,18 @@ describe('AppController (e2e)', () => {
       .get('/')
       .expect(200)
       .expect('Hello World!');
+  });
+
+  it('/content/generate (POST) - generates content successfully', () => {
+    return request(app.getHttpServer())
+      .post('/content/generate')
+      .set(SUBSCRIPTION_HEADER, Subscription.Basic)
+      .send()
+      .expect(201)
+      .expect((res) => {
+        expect(res.body).toEqual({
+          content: expect.any(String),
+        });
+      });
   });
 });
