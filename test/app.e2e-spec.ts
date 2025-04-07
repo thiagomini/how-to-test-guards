@@ -37,7 +37,7 @@ describe('AppController (e2e)', () => {
       });
   });
 
-  it('/templates (GET) - returns a list of templates', () => {
+  it('/content/templates (GET) - returns a list of templates', () => {
     return request(app.getHttpServer())
       .get('/content/templates')
       .set(SUBSCRIPTION_HEADER, Subscription.Basic)
@@ -54,10 +54,33 @@ describe('AppController (e2e)', () => {
       });
   });
 
-  it('/templates (GET) - denies request when user does not have basic plan', () => {
+  it('/content/templates (GET) - denies request when user does not have basic plan', () => {
     return request(app.getHttpServer())
       .get('/content/templates')
       .send()
       .expect(403);
+  });
+
+  it('/content/analytics (GET) - provides engagement insights for generated content', () => {
+    return request(app.getHttpServer())
+      .get('/content/analytics')
+      .set(SUBSCRIPTION_HEADER, Subscription.Premium)
+      .send()
+      .expect(200)
+      .expect((res) => {
+        expect(res.body).toEqual({
+          generatedArticles: expect.any(Number),
+          averageEngagementRate: expect.any(Number),
+          topPerformingArticles: [
+            {
+              title: expect.any(String),
+              views: expect.any(Number),
+              shares: expect.any(Number),
+              likes: expect.any(Number),
+            },
+          ],
+          suggestedImprovements: [expect.any(String)],
+        });
+      });
   });
 });
