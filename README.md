@@ -24,62 +24,95 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Example repository used as a guide for my [How to Test NestJS Guards](https://dev.to/thiagomini/how-to-test-nestjs-guards-50kn-temp-slug-2496809?preview=ad74993faf4674331ddb8986924a07cc69299f532390217f81abc4c2dfd0c3dde7be50a30ca5668f3b317bd57a4115cfc94d747e8c983e3359ec3fe0) article.
 
-## Project setup
+Its goal is to provide examples on how to create unit, integration and e2e tests for [NestJS Guards](https://docs.nestjs.com/guards), discussing the pros and cons of each type of test.
 
-```bash
-$ pnpm install
+## Domain
+
+The example domain is a SaaS for AI-Powered Content Generation called "WordWiz".
+
+"WordWiz" helps users generate high-quality marketing content, blog posts, and social media captions using AI. However, the level of access depends on the user's subscription tier:
+
+- **Free Tier**: Limited access, basic AI models, and a low word count limit.
+- **Basic Plan**: Access to better AI models, higher word limits, and additional templates.
+- **Premium Plan**: Unlimited content generation, advanced AI models, and premium integrations (e.g., SEO analysis, API access).
+
+## Endpoints
+
+- `POST content/generate`: Generates AI-powered content (Free+)
+- `GET content/templates`: Retrieves available content templates (Basic+)
+- `GET content/analytics`: Provides engagement insights for generated content
+
+All should use a SubscriptionGuard to determine whether a user has access or not to the content.
+
+```mermaid
+graph TD;
+    A[Incoming Request] -->|Check x-user-plan Header| B{Is Plan Allowed?}
+
+    B -->|Yes| C[Allow Request]
+    B -->|No| D[Return 403 Forbidden]
 ```
 
-## Compile and run the project
+### Example Responses
 
-```bash
-# development
-$ pnpm run start
+1. `POST content/generate`
 
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+```json
+{
+  "content": "Some Text"
+}
 ```
 
-## Run tests
+1. `GET content/templates`
 
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+```json
+{
+  "templates": [
+    {
+      "id": "blog-post",
+      "name": "Blog Post",
+      "description": "Structure your blog content with AI assistance."
+    },
+    {
+      "id": "social-media-caption",
+      "name": "Social Media Caption",
+      "description": "Generate engaging captions for your posts."
+    },
+    {
+      "id": "email-newsletter",
+      "name": "Email Newsletter",
+      "description": "Craft professional email newsletters quickly."
+    }
+  ]
+}
 ```
 
-## Resources
+1. `GET content/analytics`
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```json
+{
+  "analytics": {
+    "generatedArticles": 25,
+    "averageEngagementRate": "0.74",
+    "topPerformingArticles": [
+      {
+        "title": "How to Boost Your SEO with AI",
+        "views": 1200,
+        "shares": 340,
+        "likes": 250
+      },
+      {
+        "title": "5 Tips for Writing Viral Social Media Posts",
+        "views": 950,
+        "shares": 220,
+        "likes": 180
+      }
+    ],
+    "suggestedImprovements": [
+      "Use more questions in headlines to increase engagement.",
+      "Shorten paragraphs for better readability."
+    ]
+  }
+}
+```
