@@ -24,7 +24,7 @@
 
 ## Description
 
-Example repository used as a guide for my [How to Test NestJS Guards](https://dev.to/thiagomini/how-to-test-nestjs-guards-50kn-temp-slug-2496809?preview=ad74993faf4674331ddb8986924a07cc69299f532390217f81abc4c2dfd0c3dde7be50a30ca5668f3b317bd57a4115cfc94d747e8c983e3359ec3fe0) article.
+Example repository used as a guide for my [How to Test NestJS Guards](https://dev.to/thiagomini/how-to-test-nestjs-guards-55ma) article.
 
 Its goal is to provide examples on how to create unit, integration and e2e tests for [NestJS Guards](https://docs.nestjs.com/guards), discussing the pros and cons of each type of test.
 
